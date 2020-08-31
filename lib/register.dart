@@ -8,18 +8,41 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  // ignore: non_constant_identifier_names
+  TextEditingController user_data = TextEditingController();
+  String data;
   //forsifnVariable
   final formKey = GlobalKey<FormState>();
   String password, check, userName, email;
-
   String forcheck(String passsword, String check) {
     this.password = passsword;
     this.check = check;
     if (passsword == check) {
       return null;
     } else {
-      return 'Incorrect password please try again';
+      return 'รหัสผ่านไม่ตรงกัน';
     }
+  }
+
+  String changeTitle(String title) {
+    if (title == 'ERROR_NETWORK_REQUEST_FAILED') {
+      return 'การเชื่อมต่อผิดพลาด';
+    } else {
+      return title;
+    }
+  }
+
+  String changeContent(String message) {
+    if (message ==
+        'A network error (such as timeout, interrupted connection or unreachable host) has occurred.') {
+      return 'กรุณาตรวจสอบการเชื่อมต่อของคุณอีกครั้ง';
+    } else {
+      return message;
+    }
+  }
+
+  String sendmessage() {
+    return this.email;
   }
 
   void alertMessage(String title, String message) {
@@ -34,11 +57,11 @@ class _RegisterState extends State<Register> {
                 color: Colors.red.shade800,
               ),
               title: Text(
-                title,
+                changeTitle(title),
                 style: TextStyle(color: Colors.red),
               ),
             ),
-            content: Text(message),
+            content: Text(changeContent(message)),
             actions: <Widget>[
               FlatButton(
                   onPressed: () {
@@ -59,7 +82,7 @@ class _RegisterState extends State<Register> {
 
       //routeToUserinfo
       MaterialPageRoute materialPageRoute = MaterialPageRoute(
-        builder: (BuildContext context) => Userinfo(),
+        builder: (BuildContext context) => Userinfo(data),
       );
       Navigator.of(context).pushAndRemoveUntil(
           materialPageRoute, (Route<dynamic> route) => false);
@@ -89,12 +112,12 @@ class _RegisterState extends State<Register> {
           color: Colors.blue[300],
           fontStyle: FontStyle.italic,
         ),
-        hintText: 'User name',
-        hintStyle: TextStyle(),
+        hintText: 'ชื่อผู้ใช้งาน',
+        hintStyle: TextStyle(fontFamily: 'Sriracha'),
       ),
       validator: (String value) {
         if (value.isEmpty) {
-          return 'Plz enter this';
+          return 'กรุณาระบุชื่อผู้ใช้งาน';
         } else {
           return null;
         }
@@ -120,10 +143,11 @@ class _RegisterState extends State<Register> {
           fontStyle: FontStyle.italic,
         ),
         hintText: 'E-mail',
+        hintStyle: TextStyle(fontFamily: 'Sriracha'),
       ),
       validator: (String value) {
-        if (!((value.contains('@')) && (value.contains('.')))) {
-          return 'Plz enter email for ex. game@abc.com';
+        if (!((value.contains('@')) && (value.contains('.com')))) {
+          return 'กรุณากรอกอีเมลล์ในรูป. game@abc.com';
         } else {
           return null;
         }
@@ -147,13 +171,14 @@ class _RegisterState extends State<Register> {
           color: Colors.blue[300],
           fontStyle: FontStyle.italic,
         ),
-        hintText: 'Password',
+        hintText: 'รหัสผ่าน 6 ตัวขึ้นไป',
+        hintStyle: TextStyle(fontFamily: 'Sriracha'),
       ),
       autofocus: false,
       obscureText: true,
       validator: (password) {
         if (password.length < 6) {
-          return 'Plz type it more 6 character';
+          return 'กรุณากรอก 6 ตัวขึ้นไป';
         } else {
           this.password = password;
           return null;
@@ -178,7 +203,8 @@ class _RegisterState extends State<Register> {
           color: Colors.blue[300],
           fontStyle: FontStyle.italic,
         ),
-        hintText: 'Confirm password',
+        hintText: 'ยืนยันรหัสผ่าน',
+        hintStyle: TextStyle(fontFamily: 'Sriracha'),
       ),
       autofocus: false,
       obscureText: true,
@@ -201,18 +227,22 @@ class _RegisterState extends State<Register> {
             RaisedButton(
               color: Colors.blue.shade300,
               child: Text(
-                'Submit',
+                'ไปกันเล้ย',
                 style: TextStyle(
                   color: Colors.white,
+                  fontFamily: 'Sriracha',
                 ),
               ),
               onPressed: () {
                 print('submit!!!');
                 if (formKey.currentState.validate()) {
                   formKey.currentState.save();
+                  user_data.text = email;
+                  data = user_data.text;
                   print(
-                      'name = $userName, email = $email, password = $password, check = $check');
+                      'name = $userName, email = $email, password = $password, check = $check, user = $data');
                   print('it is work!!!');
+
                   registerThread();
                 }
               },

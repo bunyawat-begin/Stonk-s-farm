@@ -131,22 +131,44 @@ class _SignInState extends State<SignIn> {
         .then((res) {
       print('Success');
       MaterialPageRoute materialPageRoute =
-          MaterialPageRoute(builder: (BuildContext context) => Userinfo());
+          MaterialPageRoute(builder: (BuildContext context) => Userinfo(email));
       Navigator.of(context).pushAndRemoveUntil(
           materialPageRoute, (Route<dynamic> route) => false);
     }).catchError((res) {
       String title = res.code;
       String message = res.message;
+      //changeLanguage(title, message);
       alertMessage(title, message);
     });
   }
 
-  void changeLanguage(String title, String message) {
+  String changeTitle(String title) {
     if (title == 'error') {
-      title = 'ข้อผิดพลาด';
+      return 'มีข้อผิดพลาดเกิดขึ้น';
+    } else if (title == 'ERROR_WRONG_PASSWORD') {
+      return 'รหัสผ่านผิดพลาด';
+    } else if (title == 'ERROR_USER_NOT_FOUND') {
+      return 'ไม่พบผู้ใช้บัญชีนี้';
+    } else if (title == 'ERROR_INVALID_EMAIL') {
+      return 'กรอกอีเมลล์ผิดพลาด';
+    } else {
+      return title;
     }
+  }
+
+  String changeContent(String message) {
     if (message == 'Given String is empty or null') {
-      message = 'กรุณาใส่อีเมลล์และรหัสผ่าน';
+      return 'กรูณากรอกอีเมลล์ หรือรหัสผ่าน';
+    } else if (message ==
+        'The password is invalid or the user does not have a password.') {
+      return 'รหัสผ่านผิดพลาด หรือยังไม่มีบัญชีนี้อยู่ในระบบ';
+    } else if (message ==
+        'There is no user record corresponding to this identifier. The user may have been deleted.') {
+      return 'ไม่มีผู้ใช้งานบัญชีนี้ ไม่แน่คุณอาจจะพิมพ์ผิด หรือลบมันไปแล้วก็ได้นะ';
+    } else if (message == 'The email address is badly formatted.') {
+      return 'คุณได้กรอกที่อยู่อีเมลล์ผิดพลาด';
+    } else {
+      return message;
     }
   }
 
@@ -158,11 +180,12 @@ class _SignInState extends State<SignIn> {
         color: Colors.red,
       ),
       title: Text(
-        title, //0813970291
+        changeTitle(title), //0813970291
         style: TextStyle(
           color: Colors.red,
           fontSize: 18.0,
           fontWeight: FontWeight.bold,
+          fontFamily: 'Sriracha'
         ),
       ),
     );
@@ -182,7 +205,7 @@ class _SignInState extends State<SignIn> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: showAlertTitle(title),
-            content: Text(message),
+            content: Text(changeContent(message)),
             actions: <Widget>[
               okButton(),
             ],

@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
     FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     if (firebaseUser != null) {
       MaterialPageRoute materialPageRoute = MaterialPageRoute(
-        builder: (BuildContext context) => Userinfo(),
+        builder: (BuildContext context) => Userinfo(firebaseUser.email),
       );
       Navigator.of(context).pushAndRemoveUntil(
           materialPageRoute, (Route<dynamic> route) => false);
@@ -70,8 +70,8 @@ class _HomeState extends State<Home> {
     return RaisedButton(
       color: Colors.blue.shade300,
       child: Text(
-        'Sign in',
-        style: TextStyle(color: Colors.white),
+        'ลงชื่อเข้าใช้',
+        style: TextStyle(color: Colors.white,fontFamily: 'Sriracha'),
       ),
       onPressed: () {
         MaterialPageRoute materialPageRoute = MaterialPageRoute(
@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
 
   Widget buttonSignup() {
     return OutlineButton(
-      child: Text('Sign up'),
+      child: Text('ลงทะเบียน',style: TextStyle(fontFamily: 'Sriracha'),),
       onPressed: () {
         print('Click sign up');
 
